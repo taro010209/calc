@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex , nofollow" />
+    <title>糖質計算</title>
+    <!-- Noto Sans Japanese -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap&text=0123456789.エネルギーたんぱく質脂質炭水化物" rel="stylesheet" />
+    <!-- reset.css ress -->
+    <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css" />
+    <style>
+      .nutrients__container {
+        width: 90%;
+        margin: 40px auto 0;
+        font-family: 'Noto Sans JP', sans-serif;
+        font-weight: 400;
+        font-size: 16px;
+        display: grid;
+        gap: 20px 0;
+      }
+      .nutrients__wrapper {
+        display: grid;
+        gap: 6px 0;
+      }
+      .nutrients__name {
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+      }
+      .nutrients__value--data {
+        background-color: #eee;
+        width: 84%;
+        border-radius: 12px;
+        padding: 12px 10px;
+      }
+      .nutrients__value--unit {
+        margin-left: 6px;
+        vertical-align: bottom;
+      }
+    </style>
+  </head>
+  <body>
+    <form class="nutrients">
+      <div class="nutrients__container">
+        <div class="nutrients__wrapper">
+          <label for="energy" class="nutrients__name">エネルギー</label>
+          <p class="nutrients__value"><input type="number" name="energy" value="" inputmode="decimal" id="energy" class="nutrients__value--data" /><span class="nutrients__value--unit">kcal</span></p>
+        </div>
+        <div class="nutrients__wrapper">
+          <label for="protein" class="nutrients__name">たんぱく質</label>
+          <p class="nutrients__value"><input type="number" name="protein" value="" inputmode="decimal" id="protein" class="nutrients__value--data" /><span class="nutrients__value--unit">g</span></p>
+        </div>
+        <div class="nutrients__wrapper">
+          <label for="lipid" class="nutrients__name">脂質</label>
+          <p class="nutrients__value"><input type="number" name="lipid" value="" inputmode="decimal" id="lipid" class="nutrients__value--data" /><span class="nutrients__value--unit">g</span></p>
+        </div>
+        <div class="nutrients__wrapper">
+          <label for="carbohydrate" class="nutrients__name">炭水化物</label>
+          <p class="nutrients__value"><input type="number" name="carbohydrate" value="" inputmode="decimal" id="carbohydrate" class="nutrients__value--data" /><span class="nutrients__value--unit">g</span></p>
+        </div>
+        <p class="nutrients__name">糖質<span id="sugar-value"></span></p>
+        <p class="nutrients__name">食物繊維<span id="dietary-fiber-value"></span></p>
+      </div>
+    </form>
+
+    <script>
+      (() => {
+        const calculationFunction = () => {
+          const energyValue = document.getElementById('energy').value;
+          const proteinValue = document.getElementById('protein').value;
+          const lipidValue = document.getElementById('lipid').value;
+          const carbohydrateValue = document.getElementById('carbohydrate').value;
+
+          // 糖質 = (エネルギー(kcal) - (たんぱく質(g) * ４) - (脂質(g) * ９) ) / ４
+          // 食物繊維 = 炭水化物 - 糖質
+          const sugarValueResult = (energyValue - proteinValue * 4 - lipidValue * 9) / 4;
+          const dietaryFiberValueResult = carbohydrateValue - sugarValueResult;
+
+          document.getElementById('sugar-value').textContent = sugarValueResult.toFixed(1);
+          if (!carbohydrateValue == '') {
+            document.getElementById('dietary-fiber-value').textContent = dietaryFiberValueResult.toFixed(1);
+          }
+        };
+
+        const nutrientsValueData = document.querySelectorAll('.nutrients__value--data');
+        nutrientsValueData.forEach((element) => element.addEventListener('input', calculationFunction));
+      })();
+    </script>
+  </body>
+</html>
